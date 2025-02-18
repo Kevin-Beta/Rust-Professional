@@ -72,8 +72,27 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn reverse(&mut self){
+	pub fn reverse(&mut self)
+    where
+        T: Copy
+    {
 		// TODO
+        if self.end.is_none() || self.start.is_none() {
+            return;
+        }
+
+        let mut new_linkedlist = Self::new();
+        let mut cur_tail = self.end;
+        while let Some(node) = cur_tail {
+            unsafe{
+                let ref_node = node.as_ref();
+                new_linkedlist.add(ref_node.val);
+                cur_tail = ref_node.prev;
+            }
+        }
+
+        *self = new_linkedlist;
+
 	}
 }
 

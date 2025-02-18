@@ -69,15 +69,59 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(list_a:LinkedList<T>, list_b:LinkedList<T>) -> Self
+    where 
+        T: PartialOrd + Copy
 	{
 		//TODO
-		Self {
+        let a_head = list_a.start;
+        let b_head = list_b.start;
+        let list_c: LinkedList<T> = Self {
             length: 0,
             start: None,
             end: None,
+        };
+
+        match (a_head, b_head) {
+            (None, None) => list_c,
+            (None, Some(_node)) => list_b,
+            (Some(_node), None) => list_a,
+            (Some(_node1), Some(_node2)) => LinkedList::<T>::merge2(a_head, b_head),
         }
 	}
+
+    fn merge2(a_head: Option<NonNull<Node<T>>>, b_head: Option<NonNull<Node<T>>>) -> Self
+    where 
+        T: PartialOrd + Copy
+    {
+        let mut cur_a = &a_head;
+        let mut cur_b = &b_head;
+        let mut list_c = Self::new();
+        while let (Some(node_i), Some(node_j)) = (cur_a, cur_b) { //这里不解引用写得对吗
+            let num_a = unsafe{node_i.as_ref().val};
+            let num_b = unsafe{node_j.as_ref().val};
+            if num_a < num_b{
+                list_c.add(num_a);
+                cur_a = unsafe{&node_i.as_ref().next};
+            }else{
+                list_c.add(num_b);
+                cur_b = unsafe{&node_j.as_ref().next};
+            }
+        }
+
+        while let Some(node_i) = cur_a {
+            let num_a = unsafe{node_i.as_ref().val};
+            list_c.add(num_a);
+            cur_a = unsafe{&node_i.as_ref().next};
+        }
+
+        while let Some(node_j) = cur_b {
+            let num_b = unsafe{node_j.as_ref().val};
+            list_c.add(num_b);
+            cur_b = unsafe{&node_j.as_ref().next};
+        }
+        list_c
+    }
 }
 
 impl<T> Display for LinkedList<T>
