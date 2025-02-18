@@ -5,8 +5,18 @@
 */
 
 
-fn sort<T>(array: &mut [T]){
+fn sort<T: PartialOrd>(array: &mut [T])
+{
 	//TODO
+    for i in 0..array.len() {
+        for j in 0..array.len()-i-1 {
+            if array[j] > array[j+1] {
+                let tmp = array[j];
+                array[j] = array[j+1];
+                array[j+1] = tmp;
+            }
+        }
+    }
 }
 #[cfg(test)]
 mod tests {
