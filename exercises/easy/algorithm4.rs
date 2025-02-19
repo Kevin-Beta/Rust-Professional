@@ -71,7 +71,7 @@ where
             let val = &(*cur_ptr).value;
             if *val == value {
                 return true;
-            }else if *val > value{
+            }else if value > *val {
                 cur = &(*cur_ptr).left;
             }else{
                 cur = &(*cur_ptr).right;
@@ -88,13 +88,13 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
-        if value >= self.value {
+        if value > self.value {
             if let Some(ref mut node) = self.left {
                 (*node).insert(value);
             }else{
                 self.left = Some(Box::new(TreeNode::new(value)));
             }
-        }else{
+        }else if value < self.value {
             if let Some(ref mut node) = self.right {
                 (*node).insert(value);
             }else{
