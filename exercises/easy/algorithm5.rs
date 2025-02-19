@@ -29,8 +29,20 @@ impl Graph {
     fn bfs_with_return(&self, start: usize) -> Vec<usize> {
         
 		//TODO
-
+        let mut vdq = VecDeque::<usize>::new();
         let mut visit_order = vec![];
+
+        vdq.push_back(start);
+
+        while let Some(node) = vdq.pop_front() {
+            visit_order.push(node);
+            let sides = &self.adj[node];
+            for s_node in sides {
+                if !visit_order.contains(s_node) && !vdq.contains(s_node){
+                    vdq.push_back(*s_node);
+                }
+            }
+        }
         visit_order
     }
 }
